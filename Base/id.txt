@@ -1,0 +1,420 @@
+ String Entrenamiento = txtEnt.getText();
+        String Horario = txtHor.getText();
+        String Equipamiento = txtEqp.getText();
+        String nT = "Entrenamientos";
+        String id = "";
+        int j = 0;
+        try {
+
+            j = j + 1;
+            String t = Integer.toString(j);
+            nT = "Entrenamientos" + t;
+            DatabaseMetaData dbm = con.getMetaData();
+            pst = con.prepareStatement("SELECT * FROM " + nT + "");
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                id = rs.getString(1);
+
+            }
+            if (id.equals("5")) {
+
+                j = j + 1;
+                t = Integer.toString(j);
+                nT = "Entrenamientos" + t;
+            }
+
+            ResultSet tables = dbm.getTables(null, null, nT, null);
+            if (tables.next()) {
+
+                pst = con.prepareStatement("insert into " + nT + "(Entrenamiento,Horario,Equipamiento)values(?,?,?)");
+                pst.setString(1, Entrenamiento);
+                pst.setString(2, Horario);
+                pst.setString(3, Equipamiento);
+            } else {
+                pst = con.prepareStatement("Create table  " + nT + "(Id int identity(1,1) not null primary key, Entrenamiento varchar (30),Horario varchar (20),Equipamiento varchar(35))");
+                pst.execute();
+                pst = con.prepareStatement("insert into " + nT + "(Entrenamiento,Horario,Equipamiento)values(?,?,?)");
+                pst.setString(1, Entrenamiento);
+                pst.setString(2, Horario);
+                pst.setString(3, Equipamiento);
+            }
+
+            int k = pst.executeUpdate();
+
+            if (k == 1) {
+                JOptionPane.showMessageDialog(this, "Registro añadido");
+//                combo.addItem(Entrenamiento);
+                txtEnt.setText("");
+                txtHor.setText("");
+                txtEqp.setText("");
+                txtEnt.requestFocus();
+                Entrenamiento();
+
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(GimnasioLosMejores.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+///////////////////////////////////////////// tabla
+
+ public void Entrenamiento() {
+        try {
+            pst = con.prepareStatement("select * from Entrenamientos1");
+            ResultSet rs = pst.executeQuery();
+            ResultSetMetaData RSM = rs.getMetaData();
+            int c;
+            c = RSM.getColumnCount();
+            DefaultTableModel DF = (DefaultTableModel) jTable1.getModel();
+            DF.setRowCount(0);
+            String id = "";
+            String tabla = "Entrenamientos";
+            int j = 1;
+            int z = 0;
+            int id2 = 5;
+            while (rs.next()) {
+                Vector v2 = new Vector();
+                for (int i = 1; i <= c; i++) {
+                  
+                    if (j > 1) {
+                        id2=id2+1;
+                        v2.add(id2);
+                        
+                    } else {
+                        v2.add(rs.getString("Id"));
+                    }
+                    
+                    v2.add(rs.getString("Entrenamiento"));
+                    v2.add(rs.getString("Horario"));
+                    v2.add(rs.getString("Equipamiento"));
+                    id = rs.getString("Id");
+                }
+                if (id.equals("5")) {
+                    j = j + 1;
+                    String t = Integer.toString(j);
+                    tabla = "Entrenamientos" + t;
+                 
+                    DatabaseMetaData dbm = con.getMetaData();
+                    ResultSet tables = dbm.getTables(null, null, tabla, null);
+                    if (tables.next()) {
+                       z=z+1;
+                        pst = con.prepareStatement("select * from " + tabla + "");
+                        rs = pst.executeQuery();
+                        RSM = rs.getMetaData();
+                    } else {
+
+                    }
+
+                }
+                DF.addRow(v2);
+                System.out.println(z);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(GimnasioLosMejores.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+/////////////////////////////////
+  public void limites() throws SQLException {
+        String[] columna = {"Tabla", "L1", "L2"};
+        String[][] datos = new String[15][3];
+        String id = "";
+        String nombreT = "Entrenamientos1";
+        String nT = "";
+        int acum = 1;
+        int i = 0;
+        int j = 0;
+        boolean val = true;
+
+        while (val != false) {
+            DatabaseMetaData dbm = con.getMetaData();
+            ResultSet tables = dbm.getTables(null, null, nombreT, null);
+            if (tables.next()) {
+                pst = con.prepareStatement("select * from " + nombreT + "");
+                ResultSet rs = pst.executeQuery();
+                datos[i][j] = nombreT;
+                while (rs.next()) {
+
+                    id = rs.getString(1);
+                    if (id.equals("1")) {
+                        j = j + 1;
+                        datos[i][j] = id;
+                    }
+
+                }
+                j = j + 1;
+                datos[i][j] = id;
+                i = i + 1;
+                acum = acum + 1;
+                nT = Integer.toString(acum);
+                nombreT = "Entrenamiento" + nT + "";
+
+            } else {
+                val = false;
+            }
+
+        }
+        DefaultTableModel def = new DefaultTableModel(datos, columna);
+        JTable tabla = new JTable(def);
+        JScrollPane scroll = new JScrollPane(tabla);
+        scroll.setBounds(40, 40, 400, 200);
+        JFrame ventana = new JFrame();
+        ventana.setLayout(null);
+        ventana.setSize(500, 500);
+        ventana.setLocationRelativeTo(null);
+        ventana.add(scroll);
+        ventana.setVisible(true);
+
+    }
+
+////////////////////////////
+ String Entrenamiento = txtEnt.getText();
+        String Horario = txtHor.getText();
+        String Equipamiento = txtEqp.getText();
+        tab tabla = new tab();
+        String id = "";
+        String nombreT = "Entrenamientos1";
+        String nT = "";
+        int acum = 1;
+        int i = 0;
+        int j = 0;
+        int id2 = 0;
+        boolean val = true;
+        Object[] datos = new Object[3];
+            while (val!=false) {
+        try {
+            if (nombreT.equals("Entrenamientos1") && id2 <= 5) {
+                datos[0] = "Entrenamientos1";
+                pst = con.prepareStatement("select * from " + nombreT + "");
+                ResultSet rs = pst.executeQuery();
+                while (rs.next()) {
+                    i = i + 1;
+                    id = rs.getString(1);
+                    id2 = Integer.parseInt(id);
+                    if (id.equals("1")) {
+                        datos[1] = "1";
+                    }
+
+                    if (id2 == 5) {
+                        datos[2] = "5";
+                        id2=6;
+                    }
+                }             
+                System.out.println(i);
+                if(id2<=5){
+                    
+              
+                pst = con.prepareStatement("insert into " + nombreT + "(Entrenamiento,Horario,Equipamiento)values(?,?,?)");
+                pst.setString(1, Entrenamiento);
+                pst.setString(2, Horario);
+                pst.setString(3, Equipamiento);
+                datos[2] = id2+1;
+                tabla.tabla.addRow(datos);
+                nombreT="Entrenamientos2";
+                }
+            } 
+      
+            int k = pst.executeUpdate();
+           
+
+            if (k == 1) {
+                JOptionPane.showMessageDialog(this, "Registro añadido");
+//                combo.addItem(Entrenamiento);
+                txtEnt.setText("");
+                txtHor.setText("");
+                txtEqp.setText("");
+                txtEnt.requestFocus();
+                Entrenamiento();
+              
+            }
+            
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+        }
+       
+      }
+        tabla.setVisible(true);
+
+////////////////////////prueba 2
+  String Entrenamiento = txtEnt.getText();
+        String Horario = txtHor.getText();
+        String Equipamiento = txtEqp.getText();
+        tab tabla = new tab();
+        String id = "";
+        String nombreT = "Entrenamientos1";
+        String nT = "";
+        int acum = 1;
+        int i = 0;
+        int j = 0;
+        int id2 = 0;
+        boolean val = true;
+        Object[] datos = new Object[3];
+       
+            try {
+                DatabaseMetaData dbm = null;
+                dbm = con.getMetaData();
+                ResultSet tables = dbm.getTables(null, null, nombreT, null);
+                if (tables.next()) {
+                    try {             
+                            
+                            datos[0] = nombreT;
+                           
+                            System.out.println(nombreT);
+                            pst = con.prepareStatement("select * from " + nombreT + "");
+                            ResultSet rs = pst.executeQuery();
+                            while (rs.next()) {
+                                i = i + 1;
+                                id = rs.getString(1);
+                                id2 = Integer.parseInt(id);
+                                if (id.equals("1")) {
+                                    datos[1] = "1";
+                                }
+                                if (id2 == 5) {
+                                    datos[2] = "5";
+                                    id2 = 6;
+                                }
+                            }
+                            System.out.println(i);
+                            if (id2 <= 5) {
+                                pst = con.prepareStatement("insert into " + nombreT + "(Entrenamiento,Horario,Equipamiento)values(?,?,?)");
+                                pst.setString(1, Entrenamiento);
+                                pst.setString(2, Horario);
+                                pst.setString(3, Equipamiento);
+                                datos[2] = id2 + 1;
+                                tabla.tabla.addRow(datos);                             
+                            }else{
+                                
+                            }
+                        
+                        int k = pst.executeUpdate();
+
+                        if (k == 1) {
+                            JOptionPane.showMessageDialog(this, "Registro añadido");
+//                combo.addItem(Entrenamiento);
+                            txtEnt.setText("");
+                            txtHor.setText("");
+                            txtEqp.setText("");
+                            txtEnt.requestFocus();
+                            Entrenamiento();
+                        }
+
+                    } catch (SQLException ex) {
+                        JOptionPane.showMessageDialog(this, "Error");
+                    }
+
+                }else{
+                    val=false;
+                }
+                tabla.setVisible(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(RegistroEntrenamiento.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+
+/////ver final
+
+        String Entrenamiento = txtEnt.getText();
+        String Horario = txtHor.getText();
+        String Equipamiento = txtEqp.getText();
+        tab tabla = new tab();
+        String id = "";
+        String nombreT = "Entrenamientos1";
+        int i = 0;
+        int j = 1;
+        int id2 = 0;
+        boolean val = true;
+        Object[] datos = new Object[3];
+        try {
+            datos[0] = nombreT;
+            pst = con.prepareStatement("select * from " + nombreT + "");
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                i = i + 1;
+                id = rs.getString(1);
+                id2 = Integer.parseInt(id);
+                if (id.equals("1")) {
+                    datos[1] = "1";
+                }
+                if (id2 == 5) {
+                    datos[2] = "5";
+                    id2 = 6;
+                }
+            }
+            if (id2 <= 5) {
+                pst = con.prepareStatement("insert into " + nombreT + "(Entrenamiento,Horario,Equipamiento)values(?,?,?)");
+                pst.setString(1, Entrenamiento);
+                pst.setString(2, Horario);
+                pst.setString(3, Equipamiento);
+                datos[2] = id2 + 1;
+//                tabla.tabla.addRow(datos);
+            } else {
+                int jT = 0;
+                j = j + 1;
+                String j2 = Integer.toString(j);
+                nombreT = "Entrenamientos" + j2;
+                tabla.setVisible(true);
+                limites();
+                String pasa = "no";
+                while (val != false) {
+                    if (tabla.tablaj.getRowCount() == 1 || pasa.equals("si")) {
+
+//                    datos[0] = nombreT;
+                        pst = con.prepareStatement("Create table  " + nombreT + "(Id int identity(1,1) not null primary key, Entrenamiento varchar (30),Horario varchar (20),Equipamiento varchar(35))");
+                        pst.execute();
+                        pst = con.prepareStatement("insert into " + nombreT + "(Entrenamiento,Horario,Equipamiento)values(?,?,?)");
+                        pst.setString(1, Entrenamiento);
+                        pst.setString(2, Horario);
+                        pst.setString(3, Equipamiento);
+                        val = false;
+
+                    } else {
+                        int limite2 = 0;
+                        int tabAc = tabla.tablaj.getRowCount();
+                        System.out.println("Tabla:" + tabAc);
+
+//                        for (int x = tabAc; x < tabla.tablaj.getRowCount();) {
+                        if (tabla.tablaj.getValueAt(tabAc - 1, 0).equals("Entrenamientos" + tabAc)) {
+                            String limite = (String) tabla.tablaj.getValueAt(tabAc - 1, 2);
+                            System.out.println("LimiT:" + limite);
+                            limite2 = Integer.parseInt(limite);
+                            if (limite2 == 5) {
+                                jT = 1 + tabAc;
+                                j2 = Integer.toString(jT);
+
+                                nombreT = "Entrenamientos" + j2;
+                                System.out.println(nombreT);
+                                pasa = "si";
+                            }
+                            if (limite2 < 5) {
+
+                                nombreT = "Entrenamientos" + tabAc;
+                                pst = con.prepareStatement("insert into " + nombreT + "(Entrenamiento,Horario,Equipamiento)values(?,?,?)");
+                                pst.setString(1, Entrenamiento);
+                                pst.setString(2, Horario);
+                                pst.setString(3, Equipamiento);
+                                val = false;
+                            }
+                        }
+                    }
+                }
+                int k = pst.executeUpdate();
+
+                if (k == 1) {
+                    JOptionPane.showMessageDialog(this, "Registro añadido");
+//                    combo.addItem(Entrenamiento);
+                    txtEnt.setText("");
+                    txtHor.setText("");
+                    txtEqp.setText("");
+                    txtEnt.requestFocus();
+                    Entrenamiento();
+                    limites();
+                }
+            }
+        } catch (SQLException ex) {
+           JOptionPane.showMessageDialog(this, "Error");
+       }
+        
+

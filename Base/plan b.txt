@@ -1,0 +1,112 @@
+Plan b)
+
+Generar la tabla al principio del frame, osea 
+invocar al metodo desde que se abre la ventana
+para que ya tenga la tabla 1 con sus limites
+y ya posterior a eso manipularla
+
+Tenemos esto
+
+ String Entrenamiento = txtEnt.getText();
+        String Horario = txtHor.getText();
+        String Equipamiento = txtEqp.getText();
+        tab tabla = new tab();
+        String id = "";
+        String nombreT = "Entrenamientos1";
+        String nT = "";
+        int acum = 1;
+        int i = 0;
+        int j = 1;
+        int id2 = 0;
+        boolean val = true;
+        Object[] datos = new Object[3];
+        try {
+            datos[0] = nombreT;
+            pst = con.prepareStatement("select * from " + nombreT + "");
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                i = i + 1;
+                id = rs.getString(1);
+                id2 = Integer.parseInt(id);
+                if (id.equals("1")) {
+                    datos[1] = "1";
+                }
+                if (id2 == 5) {
+                    datos[2] = "5";
+                    id2 = 6;
+                }
+            }
+            if (id2 <= 5) {
+                pst = con.prepareStatement("insert into " + nombreT + "(Entrenamiento,Horario,Equipamiento)values(?,?,?)");
+                pst.setString(1, Entrenamiento);
+                pst.setString(2, Horario);
+                pst.setString(3, Equipamiento);
+                datos[2] = id2 + 1;
+                tabla.tabla.addRow(datos);
+            } else {
+                j = j + 1;
+                String j2 = Integer.toString(j);
+                nombreT = "Entrenamientos" + j2;
+                tabla.setVisible(true);
+                limites();
+                String pasa = "no";
+                while (val != false) {
+
+                    if (tabla.tablaj.getRowCount() == 1 || pasa.equals("si")) {
+
+//                    datos[0] = nombreT;
+                        pst = con.prepareStatement("Create table  " + nombreT + "(Id int identity(1,1) not null primary key, Entrenamiento varchar (30),Horario varchar (20),Equipamiento varchar(35))");
+                        pst.execute();
+                        pst = con.prepareStatement("insert into " + nombreT + "(Entrenamiento,Horario,Equipamiento)values(?,?,?)");
+                        pst.setString(1, Entrenamiento);
+                        pst.setString(2, Horario);
+                        pst.setString(3, Equipamiento);
+                        val = false;
+
+                    } else {
+                        int limite2 = 0;
+                        
+                        for (int x = 1; x < tabla.tablaj.getRowCount(); x++) {
+                            if (tabla.tablaj.getValueAt(x, 0).equals("Entrenamientos" + j2)) {
+                                String limite = (String) tabla.tablaj.getValueAt(x, 2);
+                                limite2 = Integer.parseInt(limite);
+                                if (limite2 == 5) {
+                                    j = j + 1;
+                                    j2 = Integer.toString(j);
+                                    nombreT = "Entrenamientos" + j2;
+                                    System.out.println(nombreT);
+                                    pasa = "si";
+                                }
+                                if (limite2 < 5) {
+
+                                    pst = con.prepareStatement("insert into " + nombreT + "(Entrenamiento,Horario,Equipamiento)values(?,?,?)");
+                                    pst.setString(1, Entrenamiento);
+                                    pst.setString(2, Horario);
+                                    pst.setString(3, Equipamiento);
+                                    val = false;
+                                }
+
+                            }
+                        }
+                    }
+
+                }
+
+                int k = pst.executeUpdate();
+
+                if (k == 1) {
+                    JOptionPane.showMessageDialog(this, "Registro añadido");
+//                combo.addItem(Entrenamiento);
+                    txtEnt.setText("");
+                    txtHor.setText("");
+                    txtEqp.setText("");
+                    txtEnt.requestFocus();
+                    Entrenamiento();
+                    limites();
+
+                }
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+
+        }

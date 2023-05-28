@@ -1,0 +1,13 @@
+La clase principal es la de "log"
+
+
+Realice fragmentación HORIZONTAL de la tabla entrenamiento (Entrenamiento, Horario, Equipamiento Especia) cada tabla deberá tener 5 registros. Se permitirá registrar, eliminar, consultar y actualizar datos.
+
+Registrar: Cuando se registre una tupla, se deberá respetar que solo tenga un máximo de 5 registros por tabla, cuando se registre y sea el numero 6, se deberá crear una tabla nueva y registrar en la tabla nueva, siendo el registro numero 1.
+Se pedirá que solo se tenga una tabla con 3 registros; se pedirá se ingresen 9 registros nuevos, esto quiere decir que se crearan 2 tablas cada 5 registros, de tal marera que el registro 9 (mas los 3 existentes) quedara en la tabla 3.
+
+Eliminar: se pedirá se elimine un registro de la tabla2, no es necesario que se llene el espacio con otro registro, es decir no se recorrerán, la tabla 1 tendrá 5, registros la tabla 2, 4 y la tabla 3, 2.
+
+Consulta: se deberá mostrar como si fuera una sola tabla, también cuando se cargue en el combobox se mostraran todos los datos de las tablas fragmentadas. Cuando se pulse un registro deberá mostrar los datos pertenecientes al registro.
+
+Actualizar: al ser pulsado un elemento del tabla en NB, se mostraran los datos en las cajas de texto pertinentes, se modificaran los datos y al dar en el botón de modificar se almacenara los datos actualizados.
